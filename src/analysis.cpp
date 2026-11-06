@@ -102,7 +102,7 @@ void apply_k_weighting(std::vector<float>& x, int sample_rate) {
 }
 
 // Compute simple phase correlation for stereo.
-// This is *not* part of BS.1770, but it’s a useful UX signal.
+// This is *not* part of BS.1770; it is an additional stereo diagnostic.
 double compute_phase_correlation(const std::vector<float>& L,
                                  const std::vector<float>& R) {
     if (L.size() != R.size() || L.empty())
@@ -555,7 +555,7 @@ AdvancedAnalysisResult analyze_advanced_stereo(
     const double stress = (0.50 * tp_n) + (0.30 * crest_n) + (0.20 * lra_n);
     out.limiter_stress_0_100 = clamp(stress * 100.0, 0.0, 100.0);
 
-    // Platform preview (Universal Safety Curve)
+    // Illustrative loudness normalization targets (not service policies).
     const std::vector<std::pair<std::string,double>> targets = {
         {"Streaming -14", -14.0},
         {"Streaming -16", -16.0},

@@ -1,6 +1,4 @@
-// cpp/headroom_dsp/bindings.cpp
-//
-// Pybind11 glue that exposes the C++ DSP core to Python.
+// Python bindings for the independent HeadroomDSP C++ library.
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -65,7 +63,7 @@ static AdvancedAnalysisResult analyze_advanced_numpy(
 // -----------------------------------------------------
 
 PYBIND11_MODULE(headroom_dsp, m) {
-    m.doc() = "Headroom BS.1770 / EBU-R128 loudness analysis core";
+    m.doc() = "HeadroomDSP loudness, peak, dynamics, and stereo analysis";
 
     // Base result
     py::class_<AnalysisResult>(m, "AnalysisResult")
@@ -115,6 +113,6 @@ PYBIND11_MODULE(headroom_dsp, m) {
         py::arg("left"),
         py::arg("right"),
         py::arg("sample_rate"),
-        "Advanced analysis (timeline + insights) for premium UI."
+        "Time-series loudness and audio diagnostics."
     );
 }

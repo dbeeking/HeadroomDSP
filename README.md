@@ -1,14 +1,14 @@
 # HeadroomDSP
 
-Standalone, MIT-licensed C++17 audio analysis library extracted from Headroom.
+Independent, MIT-licensed C++17 library for audio loudness, peak, dynamics, and stereo diagnostics.
 
-**Status: v0.1.0, experimental.** Builds without Python, Tauri, Rust, NumPy, libebur128, or an audio decoder. Accepts decoded, planar float samples; the caller owns decoding and file I/O. No samples or app credentials are included.
+**Status: v0.1.0, experimental.** The native C++ core has no runtime dependencies. It accepts decoded, planar float samples; callers provide decoding and file I/O. Optional Python bindings use pybind11 and NumPy.
 
 ## Features
 
 - K-weighted, gated integrated LUFS (400 ms blocks / 100 ms hop), 95th-percentile momentary and short-term summaries, and EBU-style LRA estimate
 - FIR-based 4x inter-sample peak estimation (not linear interpolation)
-- Stereo correlation and peak-to-loudness ratio (legacy field name `crest_factor_db`)
+- Stereo correlation and peak-to-loudness ratio (exposed as `crest_factor_db` for API compatibility)
 - Time-aligned 400 ms / 3 s loudness windows, *sample*-peak timeline, dynamic-change hotspots
 - Heuristic limiter-stress score and illustrative gain/peak-limited normalization previews
 - C++ API, C ABI, optional pybind11 NumPy-compatible module; CMake install/export targets
@@ -66,16 +66,16 @@ print(result.integrated_lufs)  # -inf for silence
 
 - `analyze_stereo(left,right,sample_rate)` requires equal-size, nonempty, finite vectors, **at least 400 ms** of input, and sample rates 8,000–384,000 Hz. There is no file reader. For mono, duplicate the channel only if you want stereo-equivalent loudness, not genuine mono loudness.
 - `momentary_lufs` and `short_term_lufs` fields of the *summary* are 95th percentiles, not the latest instantaneous readings. Short-term is `-inf` when there are no complete 3 s windows.
-- `true_peak_dbtp` is the *whole-signal FIR estimate*. The legacy `AdvancedAnalysisResult::true_peak_dbfs` timeline (and C ABI `hr_adv_timeline_peak`) records **ordinary per-hop sample peak, in dBFS**, not true peak; retained for existing Headroom consumers. Do not label it as dBTP.
+- `true_peak_dbtp` is the *whole-signal FIR estimate*. The `AdvancedAnalysisResult::true_peak_dbfs` timeline (and C ABI `hr_adv_timeline_peak`) records **ordinary per-hop sample peak, in dBFS**, not true peak; the field name is maintained for API compatibility. Do not label it as dBTP.
 - `crest_factor_db` is an existing field name for peak-to-loudness ratio (PLR); it is **not** a conventional sample peak minus RMS crest-factor measurement.
 - `limiter_stress_0_100` is a **heuristic**, not a measured limiting amount or a standards-based metric. `platform` contains illustrative -14/-16 LUFS target previews with a -1 dBTP cap, not official policies of any music service.
 - Silent programme returns `-inf` loudness and true peak; JSON encoders may need explicit representation for infinities.
 - 4x FIR reconstruction incurs extra CPU work. It is an offline/batch-oriented first implementation; not designed for hard real-time audio callbacks.
-- C ABI pointers and result handles must remain valid for the duration of calls. Legacy timeline getters write exactly `hr_adv_timeline_len()` doubles into caller-provided buffers; do not provide smaller buffers. Future releases should add checked, length-aware getters for untrusted consumers.
+- C ABI pointers and result handles must remain valid for the duration of calls. Timeline getters write exactly `hr_adv_timeline_len()` doubles into caller-provided buffers; do not provide smaller buffers. Future releases should add checked, length-aware getters for untrusted consumers.
 
-## Origin and license
+## License
 
-Extracted from the original `Headroom/cpp/headroom_dsp` files. Original MIT notice retained: copyright 2025 David Bailey. No vendored third-party code or original desktop UI/distribution is included. This repository does not modify the original Headroom project in place.
+MIT License. Copyright (c) 2025 David Bailey. The library is independently buildable and contains no bundled third-party DSP implementation.
 
 ## Reference material
 

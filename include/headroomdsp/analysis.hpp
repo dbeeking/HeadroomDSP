@@ -4,7 +4,7 @@
 
 namespace headroom {
 
-// Result struct mirrors what your UI expects.
+// Summary statistics returned by the public C++ API.
 // Uses BS.1770 / EBU-style analysis; true-peak FIR requires formal conformance testing.
 // - Loudness in LUFS / LU
 // - True peak in dBTP
@@ -15,12 +15,12 @@ struct AnalysisResult {
   double momentary_lufs;     // Momentary loudness (0.4 s, M)
   double true_peak_dbtp;     // Max true peak level [dBTP]
   double loudness_range_lu;  // LRA, in Loudness Units
-  double crest_factor_db;    // Legacy name: peak-to-loudness ratio (PLR), not RMS crest factor
+  double crest_factor_db;    // API field name: peak-to-loudness ratio (PLR), not RMS crest factor
   double phase_correlation;  // -1 .. 1
   double duration_sec;       // seconds
 };
 
-// Premium Advanced Analytics payload
+// Time-series loudness measurements and derived diagnostics.
 struct AdvancedAnalysisResult {
   // Timeline sampled every hop_sec (typically 0.1s)
   double hop_sec = 0.1;
@@ -28,7 +28,7 @@ struct AdvancedAnalysisResult {
   std::vector<double> t_sec;
   std::vector<double> momentary_lufs;   // 400ms window (per hop)
   std::vector<double> short_term_lufs;  // 3s window (per hop)
-  std::vector<double> true_peak_dbfs;   // LEGACY NAME: per-hop SAMPLE peak, NOT true peak
+  std::vector<double> true_peak_dbfs;   // API field name: per-hop SAMPLE peak, NOT true peak
 
   // Derived
   double limiter_stress_0_100 = 0.0;
@@ -58,7 +58,7 @@ AnalysisResult analyze_stereo(
   int sample_rate
 );
 
-// Advanced analytics entry point (Premium)
+// Time-series analysis entry point.
 AdvancedAnalysisResult analyze_advanced_stereo(
   const std::vector<float>& left,
   const std::vector<float>& right,

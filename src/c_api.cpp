@@ -71,7 +71,7 @@ void hr_adv_timeline_short_term(HRAdvanced h, double* out) {
     copy_array(h, out, &AdvancedAnalysisResult::short_term_lufs);
 }
 void hr_adv_timeline_peak(HRAdvanced h, double* out) {
-    // Legacy name: actual sample peak, not 4x FIR true peak.
+    // API name: sample peak, not 4x FIR true peak.
     copy_array(h, out, &AdvancedAnalysisResult::true_peak_dbfs);
 }
 int hr_adv_platform_count(HRAdvanced h) {
