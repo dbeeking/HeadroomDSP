@@ -1,0 +1,12 @@
+/build/
+/.venv/
+*.egg-info/
+__pycache__/
+*.so
+*.dylib
+*.dll
+*.pyd
+.DS_Store
+
+build/
+.DS_Store

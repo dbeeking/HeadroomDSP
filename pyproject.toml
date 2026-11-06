@@ -1,0 +1,22 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11>=2.11"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "headroom-dsp"
+version = "0.1.0"
+description = "Independent C++ loudness measurement and stereo audio diagnostics"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [{name = "David Bailey"}]
+classifiers = ["Programming Language :: C++", "Programming Language :: Python :: 3"]
+
+[tool.scikit-build]
+cmake.build-type = "Release"
+wheel.packages = []
+
+[tool.scikit-build.cmake.define]
+HEADROOMDSP_BUILD_PYTHON = "ON"
+HEADROOMDSP_BUILD_TESTS = "OFF"
+HEADROOMDSP_BUILD_EXAMPLES = "OFF"
